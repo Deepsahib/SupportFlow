@@ -22,6 +22,7 @@ coverage/
 
 # TypeScript and package-manager files
 *.tsbuildinfo
+apps/api/src/**/*.js
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
