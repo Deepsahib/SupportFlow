@@ -68,6 +68,13 @@ export const createWorkspace = async (
 	}
 };
 
-export const getUserWorkspace = (userId: string) => {
-	const getMembership =
-}
+export const getUserWorkspace = async (userId: string) => {
+	return Membership.find({
+		userId: new mongoose.Types.ObjectId(userId),
+		status: MembershipStatus.ACTIVE,
+	}).populate("workspaceId");
+};
+
+export const getWorkspace = async (workspaceId: string|string[]) => {
+	return Workspace.findById(workspaceId);
+};

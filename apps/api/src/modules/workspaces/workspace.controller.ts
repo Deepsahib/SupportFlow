@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { AppError } from "../../common/errors/AppError.js";
-import { createWorkspace, getUserWorkspace } from "./workspace.service.js";
+import { createWorkspace, getUserWorkspace, getWorkspace } from "./workspace.service.js";
 
 export const createWorkspaceController = async (
   req: Request,
@@ -26,12 +26,42 @@ export const createWorkspaceController = async (
   }
 };
 
-export const getUserWorkspaceController = (req: Request, res: Response, next: NextFunction) => {
-  const workspaceId: any = req.user.userId;
+export const getUserWorkspaceController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const userId = req.user?.userId;
 
-  if (!workspaceId) {
-    throw AppError("User not authenticated", 400)
+    if (!userId) {
+      throw AppError("User not authenticated", 401);
+    }
+
+    const userWorkspaces = await getUserWorkspace(userId);
+    console.log("userWorkspaceid",userWorkspaces)
+
+    return res.status(200).json({
+      success: true,
+      data: userWorkspaces,
+    });
+  } catch (error) {
+    next(error);
   }
+};
 
-  const userWorkspace = getUserWorkspace(workspaceId);
+export const getWorkspaceController=async(req:Request,res:Response,next:NextFunction)=>{
+  try {
+    const workspace=getWorkspace(req.params.workspaceId);
+    if (!workspace) {
+      throw AppError("Workspace not found", 404);
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: workspace,
+    });
+  } catch (error) {
+    next(error);
+  }
 }
