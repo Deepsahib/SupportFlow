@@ -6,6 +6,7 @@ import { errorHandler } from './common/middleware/errorHandler.js';
 import { authRoutes } from './modules/auth/auth.route.js';
 import { workspaceRouter } from './modules/workspaces/workspace.route.js';
 import { loadEnv } from './config/env.js';
+import { ticketRouter } from './modules/tickets/ticket.route.js';
 
 loadEnv();
 
@@ -24,6 +25,7 @@ app.get("/health", (req: Request, res: Response) => {
 
 app.use("/api/v1/auth", authRoutes)
 app.use("/api/v1", workspaceRouter)
+app.use("/api/v1", ticketRouter)
 
 
 app.use(notFound);

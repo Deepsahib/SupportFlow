@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { AppError } from "../../common/errors/AppError.js";
-import { CreateTicket } from "./ticket.service.js";
+import { CreateTicket, GetTicketWorkspaceService } from "./ticket.service.js";
 
 export const TicketController = async (
     req: Request,
@@ -28,6 +28,31 @@ export const TicketController = async (
             success: true,
             data: ticket,
         });
+    } catch (error) {
+        return next(error);
+    }
+}
+
+export const getTicketWorkspaceController = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) => {
+    try {
+        const workspaceId = req.params.workspaceId;
+        const userId = req.user?.userId;
+
+        if (!userId) {
+            throw AppError("User not authenticated", 401);
+        }
+        
+        const ticket=await GetTicketWorkspaceService(workspaceId,userId);
+
+        return res.status(200).json({
+            success: true,
+            data: ticket,
+        });
+
     } catch (error) {
         return next(error);
     }

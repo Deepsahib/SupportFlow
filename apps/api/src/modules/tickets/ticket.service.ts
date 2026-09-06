@@ -34,3 +34,24 @@ export const CreateTicket = async (
 
     return ticket;
 }
+
+export const GetTicketWorkspaceService = async (
+    workspaceId: string | string[],
+    userId: string,
+) => {
+    const workspaceIdValue = Array.isArray(workspaceId) ? workspaceId[0] : workspaceId;
+    if (
+        !workspaceIdValue ||
+        !userId ||
+        !mongoose.Types.ObjectId.isValid(workspaceIdValue) ||
+        !mongoose.Types.ObjectId.isValid(userId)
+    ) {
+        throw AppError("Missing required fields",400);
+    }
+
+    const ticket = await Ticket.find({
+        workspaceId: new mongoose.Types.ObjectId(workspaceIdValue)
+    });
+
+    return ticket;
+}
